@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 // Response with all values from API
 @Serializable
-data class PeopleResponse(
+data class PeopleDTO(
     @SerialName("count")
     val count: Int,
     @SerialName("next")

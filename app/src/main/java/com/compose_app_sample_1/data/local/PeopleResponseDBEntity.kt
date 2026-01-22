@@ -4,6 +4,7 @@ package com.compose_app_sample_1.data.local
 // Creating small entity which will contain only required data from API response.
 data class PeopleResponseDBEntity(val count: Int, val people: List<PeopleDBEntity>) {
     data class PeopleDBEntity(
+        val id: Int,
         val birthYear: String,
         val name: String,
         val gender: String,

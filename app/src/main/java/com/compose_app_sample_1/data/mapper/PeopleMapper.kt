@@ -1,16 +1,18 @@
 package com.compose_app_sample_1.data.mapper
 
 import com.compose_app_sample_1.data.local.PeopleResponseDBEntity
-import com.compose_app_sample_1.data.remote.PeopleResponse
+import com.compose_app_sample_1.data.remote.PeopleDTO
 import com.compose_app_sample_1.domain.model.PeopleResponseDomain
 
 object PeopleMapper {
 
     // convert large API response data to small object
-    fun dtoToDatabaseEntity(dto: PeopleResponse): PeopleResponseDBEntity = PeopleResponseDBEntity(
+    fun dtoToDatabaseEntity(dto: PeopleDTO): PeopleResponseDBEntity = PeopleResponseDBEntity(
         dto.count,
         people = dto.results.map {
+
             PeopleResponseDBEntity.PeopleDBEntity(
+                id = it.url.trim('/').split('/').last().toInt(),
                 birthYear = it.birthYear,
                 name = it.name,
                 gender = it.gender,
@@ -23,6 +25,7 @@ object PeopleMapper {
         dto.count,
         people = dto.people.map {
             PeopleResponseDomain.PeopleDomain(
+                id = it.id,
                 birthYear = it.birthYear,
                 name = it.name,
                 gender = it.gender,
