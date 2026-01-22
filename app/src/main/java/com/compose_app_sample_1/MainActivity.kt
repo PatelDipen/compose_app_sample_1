@@ -11,7 +11,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import androidx.navigation.compose.rememberNavController
 import com.compose_app_sample_1.presentation.screen.PeopleList
 import com.compose_app_sample_1.ui.theme.Compose_app_sample_1Theme
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     Column(
                         modifier = Modifier.padding(innerPadding)
                     ) {
-                        PeopleList()
+                        AppNavGraph()
                     }
                 }
             }
@@ -36,17 +39,19 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun AppNavGraph(){
+    val navController = rememberNavController()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Compose_app_sample_1Theme {
-        Greeting("Android")
+    NavHost(navController = navController, startDestination = "homeGraph") {
+
+        // Home navigation
+        navigation(startDestination = "peopleList", route = "homeGraph") {
+            composable("peopleList") { PeopleList() }
+            composable("peopleDetail") { backStackEntry ->
+                val id = navController.previousBackStackEntry
+                    ?.savedStateHandle?.get<Int>("people_id")
+                id?.let { Text("People Detail $it") }
+            }
+        }
     }
 }

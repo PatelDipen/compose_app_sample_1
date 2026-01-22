@@ -1,9 +1,9 @@
 package com.compose_app_sample_1.domain.repository
 
-import com.compose_app_sample_1.domain.model.PeopleResponseDomain
-import kotlinx.coroutines.flow.Flow
+import androidx.paging.Pager
+import com.compose_app_sample_1.domain.model.PeopleResponseDomain.PeopleDomain
 
 interface PeopleRepository {
-    suspend fun getPeoples(page: Int): Flow<PeopleResponseDomain>
+    fun getPeoplePager(): Pager<Int, PeopleDomain>
 }
 
