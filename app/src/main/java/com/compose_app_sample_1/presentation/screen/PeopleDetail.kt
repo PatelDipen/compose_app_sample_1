@@ -13,7 +13,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
+import com.compose_app_sample_1.presentation.component.ErrorItem
 import com.compose_app_sample_1.presentation.component.LoadingItem
+import com.compose_app_sample_1.presentation.model.PeopleDetailState
 import com.compose_app_sample_1.presentation.model.PeopleDetailUI
 import com.compose_app_sample_1.presentation.viewmodel.PeopleDetailViewModel
 
@@ -25,10 +27,18 @@ fun PeopleDetail(
 ) {
     val peopleDetail by viewModel.peopleDetail.collectAsStateWithLifecycle()
 
-    peopleDetail?.let {
-        PeopleDetailCard(it) {}
-    } ?: run {
-        LoadingItem()
+    when (peopleDetail) {
+        is PeopleDetailState.Loading -> {
+            LoadingItem()
+        }
+
+        is PeopleDetailState.Success -> {
+            PeopleDetailCard(peopleDetails = (peopleDetail as PeopleDetailState.Success).peopleDetail) {}
+        }
+
+        is PeopleDetailState.Error -> {
+            ErrorItem(message = (peopleDetail as PeopleDetailState.Error).message)
+        }
     }
 }
 

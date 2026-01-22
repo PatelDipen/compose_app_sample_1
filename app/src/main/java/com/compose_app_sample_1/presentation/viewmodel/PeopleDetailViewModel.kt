@@ -4,7 +4,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.compose_app_sample_1.domain.usecases.GetPeopleDetailUseCase
+import com.compose_app_sample_1.presentation.model.PeopleDetailState
 import com.compose_app_sample_1.presentation.model.PeopleDetailUI
+import com.compose_app_sample_1.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,8 +20,8 @@ class PeopleDetailViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    private val _peopleDetail = MutableStateFlow<PeopleDetailUI?>(null)
-    val peopleDetail: StateFlow<PeopleDetailUI?> = _peopleDetail
+    private val _peopleDetail = MutableStateFlow<PeopleDetailState>(PeopleDetailState.Loading)
+    val peopleDetail: StateFlow<PeopleDetailState> = _peopleDetail
 
     init {
         savedStateHandle.get<Int>("people_id")?.let { id ->
@@ -30,17 +32,33 @@ class PeopleDetailViewModel @Inject constructor(
     private fun getPeopleDetail(id: Int) {
         viewModelScope.launch {
             val peopleDetail = getPeopleDetailUseCase(id)
-            _peopleDetail.value = PeopleDetailUI(
-                birthYear = peopleDetail.birthYear,
-                films = peopleDetail.films,
-                gender = peopleDetail.gender,
-                hairColor = peopleDetail.hairColor,
-                height = peopleDetail.height,
-                homeworld = peopleDetail.homeworld,
-                mass = peopleDetail.mass,
-                name = peopleDetail.name,
-                skinColor = peopleDetail.skinColor
-            )
+            when (peopleDetail) {
+                is Resource.Loading -> {
+                    _peopleDetail.value = PeopleDetailState.Loading
+                }
+
+                is Resource.Success -> {
+                    peopleDetail.data?.apply {
+                        _peopleDetail.value = PeopleDetailState.Success(
+                            PeopleDetailUI(
+                                birthYear = birthYear,
+                                films = films,
+                                gender = gender,
+                                hairColor = hairColor,
+                                height = height,
+                                homeworld = homeworld,
+                                mass = mass,
+                                name = name,
+                                skinColor = skinColor
+                            )
+                        )
+                    }
+                }
+
+                is Resource.Error -> {
+                    _peopleDetail.value = PeopleDetailState.Error(peopleDetail.error!!)
+                }
+            }
         }
     }
 }
