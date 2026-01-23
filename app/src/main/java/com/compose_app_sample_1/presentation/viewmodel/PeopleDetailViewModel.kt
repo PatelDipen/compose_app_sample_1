@@ -6,7 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.compose_app_sample_1.domain.usecases.GetPeopleDetailUseCase
 import com.compose_app_sample_1.presentation.model.PeopleDetailState
 import com.compose_app_sample_1.presentation.model.PeopleDetailUI
-import com.compose_app_sample_1.utils.Resource
+import com.compose_app_sample_1.utils.DomainResult
+import com.compose_app_sample_1.utils.Failure
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -31,13 +32,10 @@ class PeopleDetailViewModel @Inject constructor(
 
     private fun getPeopleDetail(id: Int) {
         viewModelScope.launch {
-            val peopleDetail = getPeopleDetailUseCase(id)
-            when (peopleDetail) {
-                is Resource.Loading -> {
-                    _peopleDetail.value = PeopleDetailState.Loading
-                }
+            _peopleDetail.value = PeopleDetailState.Loading
 
-                is Resource.Success -> {
+            when (val peopleDetail = getPeopleDetailUseCase(id)) {
+                is DomainResult.Success -> {
                     peopleDetail.data?.apply {
                         _peopleDetail.value = PeopleDetailState.Success(
                             PeopleDetailUI(
@@ -55,8 +53,21 @@ class PeopleDetailViewModel @Inject constructor(
                     }
                 }
 
-                is Resource.Error -> {
-                    _peopleDetail.value = PeopleDetailState.Error(peopleDetail.error!!)
+                is DomainResult.Error -> {
+                    when (peopleDetail.failure) {
+                        is Failure.Network -> {
+                            _peopleDetail.value = PeopleDetailState.Error("Network Error")
+                        }
+
+                        is Failure.NotFound -> {
+                            _peopleDetail.value = PeopleDetailState.Error("Not Found")
+                        }
+
+                        is Failure.Unknown -> {
+                            _peopleDetail.value =
+                                PeopleDetailState.Error(peopleDetail.failure.message)
+                        }
+                    }
                 }
             }
         }

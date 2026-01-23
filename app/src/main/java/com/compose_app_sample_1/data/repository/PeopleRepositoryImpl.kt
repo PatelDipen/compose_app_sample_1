@@ -8,7 +8,8 @@ import com.compose_app_sample_1.data.remote.PeopleAPI
 import com.compose_app_sample_1.domain.model.PeopleDetailDomain
 import com.compose_app_sample_1.domain.model.PeopleResponseDomain
 import com.compose_app_sample_1.domain.repository.PeopleRepository
-import com.compose_app_sample_1.utils.Resource
+import com.compose_app_sample_1.utils.DomainResult
+import com.compose_app_sample_1.utils.Failure
 import javax.inject.Inject
 
 class PeopleRepositoryImpl @Inject constructor(private val api: PeopleAPI) : PeopleRepository {
@@ -28,7 +29,7 @@ class PeopleRepositoryImpl @Inject constructor(private val api: PeopleAPI) : Peo
         )
     }
 
-    override suspend fun getPeopleDetail(id: Int): Resource<PeopleDetailDomain> {
+    override suspend fun getPeopleDetail(id: Int): DomainResult<PeopleDetailDomain> {
         return try {
             val response = api.getPeople(id)
 
@@ -42,9 +43,9 @@ class PeopleRepositoryImpl @Inject constructor(private val api: PeopleAPI) : Peo
             // NOTE: In our case all object are more or less similar so we dont need all this conversion
             // this is just for our understanding that on which layer data should be converted which format
 
-            Resource.Success(domain)
+            DomainResult.Success(domain)
         } catch (e: Exception) {
-            Resource.Error(e.message ?: "An unexpected error occurred")
+            DomainResult.Error(Failure.Unknown(e.message ?: "An unexpected error occurred"))
         }
     }
 }

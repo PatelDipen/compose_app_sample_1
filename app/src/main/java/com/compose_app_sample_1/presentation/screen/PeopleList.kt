@@ -9,6 +9,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -64,16 +65,16 @@ fun PersonRow(person: PeopleResponseUI.PeopleUI, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .testTag("people_list_card")
             .clickable(enabled = true, onClick = onClick)
     ) {
         Column(
             modifier = Modifier
                 .padding(8.dp)
         ) {
-            Text(text = person.name)
-            Text(text = person.birthYear)
-            Text(text = person.gender)
-//        Text(text = person.films)
+            Text(text = person.name, modifier = Modifier.testTag("people_name"))
+            Text(text = person.birthYear, modifier = Modifier.testTag("people_birth_year"))
+            Text(text = person.gender, modifier = Modifier.testTag("people_gender"))
         }
     }
 }

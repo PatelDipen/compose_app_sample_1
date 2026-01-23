@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -48,15 +49,16 @@ fun PeopleDetailCard(peopleDetails: PeopleDetailUI, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .testTag("people_detail_card")
             .clickable(enabled = true, onClick = onClick)
     ) {
         Column(
             modifier = Modifier
                 .padding(8.dp)
         ) {
-            Text(text = peopleDetails.name)
-            Text(text = peopleDetails.birthYear)
-            Text(text = peopleDetails.gender)
+            Text(text = peopleDetails.name, modifier = Modifier.testTag("people_name"))
+            Text(text = peopleDetails.birthYear, modifier = Modifier.testTag("people_birth_year"))
+            Text(text = peopleDetails.gender, modifier = Modifier.testTag("people_gender"))
         }
     }
 }
