@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.compose_app_sample_1"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.compose_app_sample_1"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
