@@ -1,11 +1,13 @@
-package com.compose_app_sample_1.presentation.screen
+package com.compose_app_sample_1.presentation.screen.mockktest
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.compose.rememberNavController
 import com.compose_app_sample_1.presentation.model.PeopleDetailState
 import com.compose_app_sample_1.presentation.model.PeopleDetailUI
+import com.compose_app_sample_1.presentation.screen.PeopleDetail
 import com.compose_app_sample_1.presentation.viewmodel.PeopleDetailViewModel
 import io.mockk.every
 import io.mockk.mockk
@@ -28,9 +30,9 @@ class PeopleDetailTest {
             PeopleDetail(navController = navController, id = 1, viewModel = viewModel)
         }
 
-        // Assuming LoadingItem shows some specific text or we can use a testTag
-        // For now, let's check if the success content is NOT there or if LoadingItem has a tag.
-        // If LoadingItem uses CircularProgressIndicator, it might not have text.
+        composeTestRule
+            .onNodeWithTag("loading")
+            .assertIsDisplayed()
     }
 
     @Test

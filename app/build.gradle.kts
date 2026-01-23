@@ -18,7 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.compose_app_sample_1.HiltTestRunner"
     }
 
     buildTypes {
@@ -101,5 +101,5 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-    debugImplementation(libs.hilt.android.testing)
+//    debugImplementation(libs.hilt.android.testing)
 }

@@ -36,7 +36,7 @@ class PeopleDetailViewModel @Inject constructor(
 
             when (val peopleDetail = getPeopleDetailUseCase(id)) {
                 is DomainResult.Success -> {
-                    peopleDetail.data?.apply {
+                    peopleDetail.data.apply {
                         _peopleDetail.value = PeopleDetailState.Success(
                             PeopleDetailUI(
                                 birthYear = birthYear,

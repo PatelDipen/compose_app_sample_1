@@ -1,17 +1,17 @@
-package com.compose_app_sample_1.presentation.screen
+package com.compose_app_sample_1.presentation.screen.hilttest
 
-import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.navigation.compose.rememberNavController
+import com.compose_app_sample_1.HiltTestActivity
 import com.compose_app_sample_1.domain.model.PeopleDetailDomain
 import com.compose_app_sample_1.domain.repository.PeopleRepository
 import com.compose_app_sample_1.fake.FakePeopleRepository
+import com.compose_app_sample_1.presentation.screen.PeopleDetail
 import com.compose_app_sample_1.utils.DomainResult
 import com.compose_app_sample_1.utils.Failure
-import com.compose_app_sample_1.utils.Resource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -22,19 +22,19 @@ import javax.inject.Inject
 @HiltAndroidTest
 class PeopleDetailScreenTest {
 
-    @get:Rule
+    @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
-    @get:Rule
-    val composeRule = createAndroidComposeRule<ComponentActivity>()
-
-    @Inject
-    lateinit var repository: PeopleRepository
+    @get:Rule(order = 1)
+    val composeRule = createAndroidComposeRule<HiltTestActivity>()
 
     @Before
     fun setup() {
         hiltRule.inject()
     }
+
+    @Inject
+    lateinit var repository: PeopleRepository
 
 //    @Test
 //    fun peopleDetail_loadingState_isDisplayed() {
@@ -73,9 +73,11 @@ class PeopleDetailScreenTest {
         composeRule.setContent {
             PeopleDetail(
                 navController = rememberNavController(),
-                id = 1
+                id = 1,
             )
         }
+
+        composeRule.waitForIdle()
 
         composeRule.onNodeWithTag("people_detail_card")
             .assertIsDisplayed()

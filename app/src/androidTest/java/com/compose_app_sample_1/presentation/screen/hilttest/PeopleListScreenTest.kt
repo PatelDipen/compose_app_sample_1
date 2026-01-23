@@ -1,6 +1,5 @@
-package com.compose_app_sample_1.presentation.screen
+package com.compose_app_sample_1.presentation.screen.hilttest
 
-import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
@@ -8,9 +7,11 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.navigation.compose.rememberNavController
+import com.compose_app_sample_1.HiltTestActivity
 import com.compose_app_sample_1.domain.model.PeopleResponseDomain
 import com.compose_app_sample_1.domain.repository.PeopleRepository
 import com.compose_app_sample_1.fake.FakePeopleRepository
+import com.compose_app_sample_1.presentation.screen.PeopleList
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
@@ -21,11 +22,11 @@ import javax.inject.Inject
 @HiltAndroidTest
 class PeopleListScreenTest {
 
-    @get:Rule
+    @get:Rule(order = 0)
     val hiltRule = HiltAndroidRule(this)
 
-    @get:Rule
-    val composeRule = createAndroidComposeRule<ComponentActivity>()
+    @get:Rule(order = 1)
+    val composeRule = createAndroidComposeRule<HiltTestActivity>()
 
     @Inject
     lateinit var repository: PeopleRepository
